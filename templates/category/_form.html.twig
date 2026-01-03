@@ -1,0 +1,68 @@
+<style>
+    .prestige-form {
+        background: white;
+        padding: 2.5rem;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+        border: 1px solid #f1f5f9;
+    }
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    .form-label {
+        display: block;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #64748b;
+        margin-bottom: 0.75rem;
+    }
+    .form-control {
+        width: 100%;
+        padding: 1rem 0;
+        border: none;
+        border-bottom: 2px solid #f1f5f9;
+        font-size: 1rem;
+        font-weight: 500;
+        color: #1e293b;
+        transition: all 0.3s ease;
+        background: transparent;
+    }
+    .form-control:focus {
+        outline: none;
+        border-bottom-color: #c5a059;
+    }
+    .btn-save {
+        width: 100%;
+        padding: 1.25rem;
+        background: #0f172a;
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 0.9rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 1rem;
+    }
+    .btn-save:hover {
+        background: #c5a059;
+        transform: translateY(-3px);
+        box-shadow: 0 15px 30px rgba(197, 160, 89, 0.25);
+    }
+</style>
+
+{{ form_start(form, {'attr': {'class': 'prestige-form', 'id': 'category_form'}}) }}
+    <div class="form-group">
+        <label class="form-label">Nom de la catégorie</label>
+        {{ form_widget(form.name, {'attr': {'class': 'form-control', 'placeholder': 'Ex: Gala de Charité'}}) }}
+        {{ form_errors(form.name) }}
+    </div>
+    
+    {# Si vous avez d'autres champs, ils suivront la même structure #}
+    
+    <button class="btn-save">{{ button_label|default('Enregistrer la catégorie') }}</button>
+{{ form_end(form) }}

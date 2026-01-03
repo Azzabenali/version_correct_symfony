@@ -1,0 +1,13 @@
+{{ form_start(form, {'attr': {'id': 'lieu_form'}}) }}
+
+    <div class="form-prestige-container">
+        {{ form_widget(form) }}
+    </div>
+
+    <div class="actions-bar">
+        <button class="btn-prestige btn-prestige-primary">
+            {{ button_label|default('Enregistrer le Lieu') }}
+        </button>
+    </div>
+
+{{ form_end(form) }}

@@ -1,0 +1,211 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Portail Administration | Événementia Prestige{% endblock %}
+
+{% block body %}
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold-primary: #c5a059;
+            --gold-secondary: #e2c275;
+            --dark-bg: #0f172a;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8fafc;
+            color: var(--text-dark);
+        }
+
+        .admin-welcome-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: 
+                radial-gradient(circle at top left, rgba(197, 160, 89, 0.05), transparent),
+                radial-gradient(circle at bottom right, rgba(15, 23, 42, 0.05), transparent);
+            padding: 2rem;
+        }
+
+        .welcome-card {
+            width: 100%;
+            max-width: 900px;
+            background: white;
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+
+        .welcome-header {
+            background: var(--dark-bg);
+            padding: 4rem 3rem;
+            text-align: center;
+            position: relative;
+            color: white;
+        }
+
+        .welcome-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: var(--gold-primary);
+        }
+
+        .brand-logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            letter-spacing: 6px;
+            color: var(--gold-primary);
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+        }
+
+        .welcome-header h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 3.5rem;
+            margin: 0;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .welcome-body {
+            padding: 4rem 3rem;
+            text-align: center;
+        }
+
+        .welcome-text {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto 3rem;
+            line-height: 1.8;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 4rem;
+            text-align: left;
+        }
+
+        .info-item {
+            padding: 1.5rem;
+            background: #f8fafc;
+            border-radius: 15px;
+            border-left: 4px solid var(--gold-primary);
+        }
+
+        .info-item label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--gold-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .info-item code {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            color: var(--dark-bg);
+            word-break: break-all;
+        }
+
+        .action-group {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+
+        .btn-prestige {
+            padding: 1.25rem 2.5rem;
+            border-radius: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.85rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: var(--gold-primary);
+            color: white;
+            box-shadow: 0 10px 20px rgba(197, 160, 89, 0.2);
+        }
+
+        .btn-primary:hover {
+            background: var(--dark-bg);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(15, 23, 42, 0.2);
+        }
+
+        .btn-outline {
+            border: 2px solid var(--dark-bg);
+            color: var(--dark-bg);
+        }
+
+        .btn-outline:hover {
+            background: var(--dark-bg);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        @media (max-width: 768px) {
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+            .welcome-header h1 {
+                font-size: 2.5rem;
+            }
+            .action-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+
+    <div class="admin-welcome-section">
+        <div class="welcome-card">
+            <div class="welcome-header">
+                <div class="brand-logo">ÉVÉNEMENTIA</div>
+                <h1>Bienvenue, {{ controller_name }}</h1>
+            </div>
+
+            <div class="welcome-body">
+                <p class="welcome-text">
+                    Votre interface d'administration Prestige est prête. Gérez vos événements, catégories et réservations avec une élégance inégalée.
+                </p>
+
+                <div class="info-grid">
+                    <div class="info-item">
+                        <label>Contrôleur Actif</label>
+                        <code>src/Controller/AdminController.php</code>
+                    </div>
+                    <div class="info-item">
+                        <label>Template Source</label>
+                        <code>templates/admin/index.html.twig</code>
+                    </div>
+                </div>
+
+                <div class="action-group">
+                    <a href="{{ path('app_admin_dashboard') }}" class="btn-prestige btn-primary">Accéder au Dashboard</a>
+                    <a href="{{ path('app_home') }}" class="btn-prestige btn-outline">Voir le Site</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

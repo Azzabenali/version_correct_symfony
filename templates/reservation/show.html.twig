@@ -1,0 +1,209 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}Réservation #{{ reservation.id }} - Administration Prestige{% endblock %}
+
+{% block page_title %}Détails de la Réservation{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        :root {
+            --gold-primary: #c5a059;
+            --gold-hover: #b48c3e;
+            --dark-bg: #0f172a;
+            --text-muted: #64748b;
+        }
+
+        .prestige-container {
+            max-width: 900px;
+            margin: 2rem auto;
+        }
+
+        .prestige-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            border: 1px solid #f1f5f9;
+            margin-bottom: 2rem;
+        }
+
+        .prestige-card-header {
+            background: #f8fafc;
+            padding: 1.5rem 2rem;
+            border-bottom: 2px solid #f1f5f9;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .prestige-card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--dark-bg);
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .prestige-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .prestige-table th {
+            width: 30%;
+            padding: 1.5rem 2rem;
+            background: #fcfdfe;
+            text-align: left;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .prestige-table td {
+            padding: 1.5rem 2rem;
+            font-size: 1rem;
+            color: var(--dark-bg);
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .prestige-table tr:last-child th,
+        .prestige-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .category-id {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 700;
+            color: var(--gold-primary);
+            font-size: 1.2rem;
+        }
+
+        .actions-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2rem;
+        }
+
+        .btn-prestige {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.875rem 1.5rem;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-prestige-primary {
+            background: var(--dark-bg);
+            color: white;
+        }
+
+        .btn-prestige-primary:hover {
+            background: var(--gold-primary);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(197, 160, 89, 0.2);
+        }
+
+        .btn-prestige-secondary {
+            background: white;
+            color: var(--text-muted);
+            border: 1px solid #e2e8f0;
+        }
+
+        .btn-prestige-secondary:hover {
+            background: #f8fafc;
+            color: var(--dark-bg);
+            border-color: var(--dark-bg);
+        }
+
+        .delete-wrapper {
+            background: #fff1f2;
+            padding: 0.5rem;
+            border-radius: 12px;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="prestige-container">
+        <div class="prestige-card">
+            <div class="prestige-card-header">
+                <h2 class="prestige-card-title">Détails de la Réservation</h2>
+                <span class="category-id">#{{ reservation.id }}</span>
+            </div>
+
+            <table class="prestige-table">
+                <tbody>
+                    <tr>
+                        <th>Date de réservation</th>
+                        <td>{{ reservation.resdate ? reservation.resdate|date('d/m/Y H:i') : 'Non défini' }}</td>
+                    </tr>
+                    <tr>
+                        <th>Nombre de tickets</th>
+                        <td>{{ reservation.numbertickets }}</td>
+                    </tr>
+                    <tr>
+                        <th>Prix total</th>
+                        <td>{{ reservation.totalprice }} €</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="prestige-card">
+            <div class="prestige-card-header">
+                <h2 class="prestige-card-title">Tickets associés</h2>
+            </div>
+
+            {% if reservation.tickets is empty %}
+                <p style="padding: 1.5rem 2rem; color: var(--text-muted);">Aucun ticket pour cette réservation.</p>
+            {% else %}
+                <table class="prestige-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nom</th>
+                            <th>Prix</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ticket in reservation.tickets %}
+                            <tr>
+                                <td class="category-id">#{{ ticket.id }}</td>
+                                <td style="font-weight: 600;">{{ ticket.name }}</td>
+                                <td>{{ ticket.price }} €</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+        </div>
+
+        <div class="actions-bar">
+            <div style="display: flex; gap: 1rem;">
+                <a href="{{ path('app_reservation_index') }}" class="btn-prestige btn-prestige-secondary">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Retour à la liste</span>
+                </a>
+
+                <a href="{{ path('app_reservation_edit', {'id': reservation.id}) }}" class="btn-prestige btn-prestige-primary">
+                    <i class="fas fa-pen"></i>
+                    <span>Modifier</span>
+                </a>
+            </div>
+
+            <div class="delete-wrapper">
+                {{ include('reservation/_delete_form.html.twig') }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

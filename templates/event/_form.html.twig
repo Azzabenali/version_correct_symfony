@@ -1,0 +1,11 @@
+{{ form_start(form, {'attr': {'id': 'event_form'}}) }}
+    <div class="form-prestige-container">
+        {{ form_widget(form) }}
+    </div>
+    {# Le bouton de soumission est géré dans les templates new.html.twig et edit.html.twig #}
+{{ form_end(form) }}
+
+{#
+Note: Le style .form-prestige-container est supposé être inclus dans le CSS global (base_admin.html.twig).
+Ceci permet d'encadrer le formulaire avec un style "Prestige".
+#}

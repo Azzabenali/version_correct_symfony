@@ -1,0 +1,138 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}Utilisateur - Administration Prestige{% endblock %}
+{% block page_title %}Détails de l'utilisateur{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        :root {
+            --gold-primary: #c5a059;
+            --gold-hover: #b48c3e;
+            --dark-bg: #0f172a;
+            --text-muted: #64748b;
+        }
+
+        .prestige-container {
+            max-width: 900px;
+            margin: 2rem auto;
+            background: white;
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            border: 1px solid #f1f5f9;
+        }
+
+        .prestige-header {
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #f8fafc;
+            padding-bottom: 1rem;
+        }
+
+        .prestige-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--dark-bg);
+            margin: 0;
+        }
+
+        .prestige-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .prestige-table th, .prestige-table td {
+            padding: 1rem 1.5rem;
+            text-align: left;
+        }
+
+        .prestige-table th {
+            font-weight: 600;
+            color: var(--text-muted);
+            width: 200px;
+        }
+
+        .actions-bar {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn-prestige {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-prestige-primary {
+            background: var(--dark-bg);
+            color: white;
+        }
+
+        .btn-prestige-primary:hover {
+            background: var(--gold-primary);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(197,160,89,0.2);
+        }
+
+        .btn-prestige-secondary {
+            background: #f1f5f9;
+            color: var(--text-muted);
+        }
+
+        .btn-prestige-secondary:hover {
+            background: #e2e8f0;
+            color: var(--dark-bg);
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="prestige-container">
+    <div class="prestige-header">
+        <h2 class="prestige-title">Détails de l'utilisateur #{{ user.id }}</h2>
+    </div>
+
+    <table class="prestige-table">
+        <tbody>
+            <tr>
+                <th>Nom</th>
+                <td>{{ user.name ?: user.email }}</td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td>{{ user.email }}</td>
+            </tr>
+            <tr>
+                <th>Roles</th>
+                <td>{{ user.roles ? user.roles|join(', ') : 'Aucun rôle' }}</td>
+            </tr>
+            <tr>
+                <th>Vérifié</th>
+                <td>{{ user.isVerified ? 'Oui' : 'Non' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="actions-bar">
+        <a href="{{ path('app_user_index') }}" class="btn-prestige btn-prestige-secondary">
+            <i class="fas fa-arrow-left"></i> Retour à la liste
+        </a>
+
+        <a href="{{ path('app_user_edit', {'id': user.id}) }}" class="btn-prestige btn-prestige-primary">
+            <i class="fas fa-pen"></i> Modifier
+        </a>
+
+        {{ include('user/_delete_form.html.twig') }}
+    </div>
+</div>
+{% endblock %}

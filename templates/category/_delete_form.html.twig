@@ -1,0 +1,14 @@
+<form method="post" action="{{ path('app_category_delete', {'id': category.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette catégorie prestigieuse ?');" style="display: inline-block;">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ category.id) }}">
+    <button class="btn-delete-prestige" style="background: #fff1f2; color: #be123c; border: none; width: 38px; height: 38px; border-radius: 8px; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center;" title="Supprimer">
+        <i class="fas fa-trash-alt"></i>
+    </button>
+</form>
+
+<style>
+    .btn-delete-prestige:hover {
+        background: #be123c !important;
+        color: white !important;
+        transform: scale(1.05);
+    }
+</style>

@@ -1,0 +1,18 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}Nouvelle Réservation - Administration{% endblock %}
+
+{% block page_title %}Ajouter une réservation{% endblock %}
+
+{% block body %}
+    <div style="max-width: 800px; margin: 0 auto;">
+        <h2 style="margin-bottom: 20px;">Créer une nouvelle réservation</h2>
+
+        {{ include('reservation/_form.html.twig') }}
+
+        <div style="margin-top: 30px;">
+            <button type="submit" class="btn btn-primary" form="reservation_form">Enregistrer</button>
+            <a href="{{ path('app_reservation_index') }}" class="btn btn-secondary">Retour à la liste</a>
+        </div>
+    </div>
+{% endblock %}

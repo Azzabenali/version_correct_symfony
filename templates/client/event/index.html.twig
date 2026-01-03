@@ -1,0 +1,264 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Collection d'Événements - Prestige{% endblock %}
+
+{% block stylesheets %}
+<style>
+    :root {
+        --gold-primary: #c5a059;
+        --gold-hover: #b48c3e;
+        --dark-bg: #0f172a;
+        --darker-bg: #0a0f1d;
+        --text-muted: #94a3b8;
+        --white: #ffffff;
+    }
+
+    body {
+        background-color: var(--darker-bg);
+        color: var(--white);
+        font-family: 'Playfair Display', serif;
+    }
+
+    /* Filtres Prestige */
+    .premium-filter {
+        background: var(--dark-bg);
+        padding: 30px 0;
+        border-bottom: 1px solid rgba(197, 160, 89, 0.2);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+    }
+
+    .filter-card {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .filter-card select,
+.filter-card input {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(197, 160, 89, 0.3);
+    color: #000; /* <-- changer de blanc à noir */
+    padding: 10px 20px;
+    border-radius: 8px;
+    outline: none;
+    transition: all 0.3s;
+}
+
+
+    .filter-card select:focus, .filter-card input:focus {
+        border-color: var(--gold-primary);
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    .filter-card button {
+        background: var(--gold-primary);
+        color: var(--darker-bg);
+        border: none;
+        padding: 10px 30px;
+        border-radius: 8px;
+        font-weight: 700;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .filter-card button:hover {
+        background: var(--gold-hover);
+        transform: translateY(-2px);
+    }
+
+    /* Liste d'événements */
+    .prestige-title {
+        text-align: center;
+        margin: 60px 0;
+        font-size: 3.5rem;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        background: linear-gradient(to bottom, #fff, var(--gold-primary));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .event-card-prestige {
+        background: var(--dark-bg);
+        border: 1px solid rgba(197, 160, 89, 0.1);
+        border-radius: 15px;
+        overflow: hidden;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .event-card-prestige:hover {
+        transform: translateY(-15px);
+        border-color: var(--gold-primary);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    }
+
+    .card-img-wrapper {
+        position: relative;
+        height: 250px;
+        overflow: hidden;
+    }
+
+    .card-img-wrapper img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.6s;
+    }
+
+    .event-card-prestige:hover .card-img-wrapper img {
+        transform: scale(1.1);
+    }
+
+    .price-tag {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: var(--gold-primary);
+        color: var(--darker-bg);
+        padding: 5px 15px;
+        border-radius: 50px;
+        font-weight: 800;
+        font-size: 0.9rem;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+
+    .card-body-prestige {
+        padding: 30px;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .card-category {
+        color: var(--gold-primary);
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-weight: 700;
+        margin-bottom: 10px;
+        display: block;
+    }
+
+    .card-title-prestige {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 15px;
+        color: #fff;
+    }
+
+    .card-info-list {
+        list-style: none;
+        padding: 0;
+        margin: 0 0 25px 0;
+        color: var(--text-muted);
+        font-size: 0.9rem;
+    }
+
+    .card-info-list li {
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .card-info-list i {
+        color: var(--gold-primary);
+        width: 15px;
+    }
+
+    .btn-prestige-outline {
+        border: 1px solid var(--gold-primary);
+        color: var(--gold-primary);
+        text-decoration: none;
+        padding: 12px;
+        border-radius: 8px;
+        text-align: center;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: all 0.3s;
+        margin-top: auto;
+    }
+
+    .btn-prestige-outline:hover {
+        background: var(--gold-primary);
+        color: var(--darker-bg);
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<form method="get" class="premium-filter">
+    <div class="filter-card">
+        <select name="category">
+            <option value="">🎯 Toutes les Catégories</option>
+            {% for c in categories %}
+                <option value="{{ c.id }}">{{ c.name }}</option>
+            {% endfor %}
+        </select>
+
+        <select name="lieu">
+            <option value="">📍 Tous les Lieux</option>
+            {% for l in lieux %}
+                <option value="{{ l.id }}">{{ l.nom }}</option>
+            {% endfor %}
+        </select>
+
+        <input type="date" name="date">
+        <input type="number" name="prix" placeholder="💰 Budget Max (DT)">
+
+        <button type="submit">Affiner la Sélection</button>
+    </div>
+</form>
+
+<div class="container pb-5">
+    <h1 class="prestige-title">Expériences d'Exception</h1>
+
+    {% if events is empty %}
+        <div style="text-align: center; padding: 100px; background: var(--dark-bg); border-radius: 20px; border: 1px dashed var(--gold-primary);">
+            <i class="fas fa-search" style="font-size: 3rem; color: var(--gold-primary); margin-bottom: 20px; display: block;"></i>
+            <h3 style="color: #fff;">Aucun événement ne correspond à vos critères</h3>
+            <p style="color: var(--text-muted);">Veuillez ajuster vos filtres pour découvrir d'autres opportunités.</p>
+        </div>
+    {% else %}
+        <div class="row g-5">
+            {% for event in events %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="event-card-prestige">
+                        <div class="card-img-wrapper">
+                            <img src="{{ asset('images/' ~ event.image) }}" alt="{{ event.titre }}">
+                            <div class="price-tag">{{ event.prix }} DT</div>
+                        </div>
+
+                        <div class="card-body-prestige">
+                            <span class="card-category">{{ event.category.name }}</span>
+                            <h5 class="card-title-prestige">{{ event.titre }}</h5>
+
+                            <ul class="card-info-list">
+                                <li><i class="fas fa-calendar-day"></i> {{ event.date|date('d/m/Y') }}</li>
+                                <li><i class="fas fa-map-marker-alt"></i> {{ event.lieu.nom }}</li>
+                                <li><i class="fas fa-ticket-alt"></i> {{ event.nombreDePlaces }} Places disponibles</li>
+                            </ul>
+
+                            <a href="{{ path('client_event_show', { id: event.id }) }}" class="btn-prestige-outline">
+                                Découvrir l'expérience
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

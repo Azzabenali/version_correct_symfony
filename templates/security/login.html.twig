@@ -1,0 +1,294 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Connexion Prestige | Événements d'Exception{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold-primary: #c5a059;
+            --gold-secondary: #e2c275;
+            --dark-bg: #0f172a;
+            --glass-white: rgba(255, 255, 255, 0.95);
+            --text-dark: #1e293b;
+            --text-gold: #b48c3e;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8fafc;
+        }
+
+        /* Arrière-plan unique et non répétitif */
+        .login-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: 
+                linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8)),
+                url('https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&q=80&w=2074');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            padding: 20px;
+            position: relative;
+        }
+
+        /* Décoration latérale élégante */
+        .login-section::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 35%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--gold-primary), var(--gold-secondary));
+            clip-path: polygon(20% 0, 100% 0, 100% 100%, 0% 100%);
+            opacity: 0.1;
+            z-index: 1;
+        }
+
+        .login-container {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 1000px;
+            display: flex;
+            background: white;
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Partie visuelle gauche */
+        .login-visual {
+            flex: 1;
+            background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
+                        url('https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&q=80&w=2069');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 4rem;
+            color: white;
+        }
+
+        .login-visual h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 3.5rem;
+            line-height: 1;
+            margin-bottom: 1rem;
+        }
+
+        .login-visual p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        /* Partie formulaire droite */
+        .login-form-area {
+            flex: 1;
+            padding: 5rem 4rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .brand-logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--gold-primary);
+            margin-bottom: 3rem;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+        }
+
+        .form-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-subtitle {
+            color: #94a3b8;
+            margin-bottom: 2.5rem;
+            font-size: 0.95rem;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #64748b;
+            margin-bottom: 0.75rem;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 1rem 0;
+            border: none;
+            border-bottom: 2px solid #f1f5f9;
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text-dark);
+            transition: all 0.3s ease;
+            background: transparent;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-bottom-color: var(--gold-primary);
+        }
+
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+            margin-bottom: 2.5rem;
+            font-size: 0.85rem;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #64748b;
+            cursor: pointer;
+        }
+
+        .forgot-pass {
+            color: var(--gold-primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 1.25rem;
+            background: var(--dark-bg);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(15, 23, 42, 0.2);
+        }
+
+        .btn-submit:hover {
+            background: var(--gold-primary);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(197, 160, 89, 0.3);
+        }
+
+        .register-prompt {
+            margin-top: 2.5rem;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+
+        .register-prompt a {
+            color: var(--text-dark);
+            font-weight: 700;
+            text-decoration: none;
+            border-bottom: 2px solid var(--gold-primary);
+            padding-bottom: 2px;
+        }
+
+        /* Alertes */
+        .alert-error {
+            background: #fff1f2;
+            color: #be123c;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            font-size: 0.85rem;
+            border-left: 4px solid #be123c;
+        }
+
+        @media (max-width: 900px) {
+            .login-visual {
+                display: none;
+            }
+            .login-container {
+                max-width: 500px;
+            }
+            .login-form-area {
+                padding: 4rem 2.5rem;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<section class="login-section">
+    <div class="login-container">
+        <!-- Côté Visuel (Prestige) -->
+        <div class="login-visual">
+            <p>L'ART DE RECEVOIR</p>
+            <h2>Moments<br>Inoubliables.</h2>
+            <p style="margin-top: 2rem; opacity: 0.7;">Accédez à votre conciergerie événementielle privée.</p>
+        </div>
+
+        <!-- Côté Formulaire -->
+        <div class="login-form-area">
+            <div class="brand-logo">ÉVÉNEMENTIA</div>
+            
+            <h1 class="form-title">Connexion</h1>
+            <p class="form-subtitle">Veuillez entrer vos accès pour continuer.</p>
+
+            {% if error %}
+                <div class="alert-error">
+                    {{ error.messageKey|trans(error.messageData, 'security') }}
+                </div>
+            {% endif %}
+
+            <form method="post">
+                <div class="input-group">
+                    <label for="inputEmail">Adresse Email</label>
+                    <input type="email" name="_username" id="inputEmail" value="{{ last_username }}" class="input-field" required autofocus placeholder="votre@email.com">
+                </div>
+
+                <div class="input-group">
+                    <label for="inputPassword">Mot de passe</label>
+                    <input type="password" name="_password" id="inputPassword" class="input-field" required placeholder="••••••••••••">
+                </div>
+
+                <div class="form-options">
+                    <label class="remember-me">
+                        <input type="checkbox" name="_remember_me" style="accent-color: var(--gold-primary);">
+                        Se souvenir de moi
+                    </label>
+                    <a href="{{ path('app_reset_password') }}" class="forgot-pass">Mot de passe oublié ?</a>
+                </div>
+
+                <button type="submit" class="btn-submit">Se Connecter</button>
+            </form>
+
+            <div class="register-prompt">
+                Pas encore membre ? <a href="{{ path('app_register') }}">Créer un compte</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
