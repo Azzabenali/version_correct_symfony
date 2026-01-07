@@ -134,76 +134,57 @@
 {% endblock %}
 
 {% block body %}
-    <div class="prestige-container">
-        <div class="prestige-card">
-            <div class="prestige-card-header">
-                <h2 class="prestige-card-title">Détails de la Réservation</h2>
-                <span class="category-id">#{{ reservation.id }}</span>
-            </div>
+<div class="prestige-container">
 
-            <table class="prestige-table">
-                <tbody>
-                    <tr>
-                        <th>Date de réservation</th>
-                        <td>{{ reservation.resdate ? reservation.resdate|date('d/m/Y H:i') : 'Non défini' }}</td>
-                    </tr>
-                    <tr>
-                        <th>Nombre de tickets</th>
-                        <td>{{ reservation.numbertickets }}</td>
-                    </tr>
-                    <tr>
-                        <th>Prix total</th>
-                        <td>{{ reservation.totalprice }} €</td>
-                    </tr>
-                </tbody>
-            </table>
+    <div class="prestige-card">
+        <div class="prestige-card-header">
+            <h2 class="prestige-card-title">Détails de la Réservation</h2>
+            <span class="category-id">#{{ reservation.id }}</span>
         </div>
 
-        <div class="prestige-card">
-            <div class="prestige-card-header">
-                <h2 class="prestige-card-title">Tickets associés</h2>
-            </div>
+        <table class="prestige-table">
+            <tbody>
+                <tr>
+                    <th>Utilisateur</th>
+                    <td>{{ reservation.user ? reservation.user.name : 'Anonyme' }}</td>
+                </tr>
+                <tr>
+                    <th>Événement</th>
+                    <td>{{ reservation.event ? reservation.event.titre : 'Non défini' }}</td>
+                </tr>
+                <tr>
+                    <th>Date de réservation</th>
+                    <td>{{ reservation.resdate ? reservation.resdate|date('d/m/Y H:i') : 'Non défini' }}</td>
+                </tr>
+                <tr>
+                    <th>Nombre de tickets</th>
+                    <td>{{ reservation.numbertickets }}</td>
+                </tr>
+                <tr>
+                    <th>Prix total</th>
+                    <td>{{ reservation.totalprice }} €</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
-            {% if reservation.tickets is empty %}
-                <p style="padding: 1.5rem 2rem; color: var(--text-muted);">Aucun ticket pour cette réservation.</p>
-            {% else %}
-                <table class="prestige-table">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Nom</th>
-                            <th>Prix</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for ticket in reservation.tickets %}
-                            <tr>
-                                <td class="category-id">#{{ ticket.id }}</td>
-                                <td style="font-weight: 600;">{{ ticket.name }}</td>
-                                <td>{{ ticket.price }} €</td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            {% endif %}
+    <div class="actions-bar">
+        <div style="display: flex; gap: 1rem;">
+            <a href="{{ path('app_reservation_index') }}" class="btn-prestige btn-prestige-secondary">
+                <i class="fas fa-arrow-left"></i>
+                <span>Retour à la liste</span>
+            </a>
+
+            <a href="{{ path('app_reservation_edit', {'id': reservation.id}) }}" class="btn-prestige btn-prestige-primary">
+                <i class="fas fa-pen"></i>
+                <span>Modifier</span>
+            </a>
         </div>
 
-        <div class="actions-bar">
-            <div style="display: flex; gap: 1rem;">
-                <a href="{{ path('app_reservation_index') }}" class="btn-prestige btn-prestige-secondary">
-                    <i class="fas fa-arrow-left"></i>
-                    <span>Retour à la liste</span>
-                </a>
-
-                <a href="{{ path('app_reservation_edit', {'id': reservation.id}) }}" class="btn-prestige btn-prestige-primary">
-                    <i class="fas fa-pen"></i>
-                    <span>Modifier</span>
-                </a>
-            </div>
-
-            <div class="delete-wrapper">
-                {{ include('reservation/_delete_form.html.twig') }}
-            </div>
+        <div class="delete-wrapper">
+            {{ include('reservation/_delete_form.html.twig') }}
         </div>
     </div>
+
+</div>
 {% endblock %}

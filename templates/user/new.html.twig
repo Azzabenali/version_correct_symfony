@@ -1,18 +1,139 @@
 {% extends 'base_admin.html.twig' %}
 
-{% block title %}Nouvel Utilisateur - Administration{% endblock %}
+{% block title %}Nouvel Utilisateur - Administration Prestige{% endblock %}
 
 {% block page_title %}Ajouter un utilisateur{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        :root {
+            --gold-primary: #c5a059;
+            --gold-hover: #b48c3e;
+            --dark-bg: #0f172a;
+            --text-muted: #64748b;
+        }
+
+        .prestige-container {
+            max-width: 900px;
+            margin: 2rem auto;
+            background: white;
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            border: 1px solid #f1f5f9;
+        }
+
+        .prestige-header {
+            margin-bottom: 2.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #f8fafc;
+        }
+
+        .prestige-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--dark-bg);
+            margin: 0;
+        }
+
+        .btn-prestige {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.875rem 1.5rem;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-prestige-primary {
+            background: var(--dark-bg);
+            color: white;
+        }
+
+        .btn-prestige-primary:hover {
+            background: var(--gold-primary);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(197, 160, 89, 0.2);
+        }
+
+        .btn-prestige-secondary {
+            background: #f1f5f9;
+            color: var(--text-muted);
+        }
+
+        .btn-prestige-secondary:hover {
+            background: #e2e8f0;
+            color: var(--dark-bg);
+        }
+
+        .form-section {
+            margin-bottom: 2rem;
+        }
+
+        /* Styles pour les champs du formulaire inclus */
+        .form-section input,
+        .form-section textarea,
+        .form-section select {
+            width: 100%;
+            padding: 0.875rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            margin-top: 0.5rem;
+            margin-bottom: 1.25rem;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .form-section input:focus,
+        .form-section textarea:focus,
+        .form-section select:focus {
+            border-color: var(--gold-primary);
+            box-shadow: 0 0 0 4px rgba(197, 160, 89, 0.1);
+            outline: none;
+        }
+
+        .form-section label {
+            font-weight: 600;
+            color: var(--dark-bg);
+            font-size: 0.9rem;
+        }
+
+        .actions-bar {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #f1f5f9;
+        }
+    </style>
+{% endblock %}
+
 {% block body %}
-    <div style="max-width: 800px; margin: 0 auto;">
-        <h2 style="margin-bottom: 20px;">Créer un nouvel utilisateur</h2>
+    <div class="prestige-container">
+        <div class="prestige-header">
+            <h2 class="prestige-title">Créer un nouvel utilisateur</h2>
+        </div>
 
-        {{ include('user/_form.html.twig') }}
+        <div class="form-section">
+            {{ include('user/_form.html.twig') }}
+        </div>
 
-        <div style="margin-top: 30px;">
-            <button type="submit" class="btn btn-primary" form="user_form">Enregistrer</button>
-            <a href="{{ path('app_user_index') }}" class="btn btn-secondary">Retour à la liste</a>
+        <div class="actions-bar">
+            <button type="submit" class="btn-prestige btn-prestige-primary" form="user_form">
+                <i class="fas fa-user-plus"></i>
+                <span>Enregistrer l'utilisateur</span>
+            </button>
+
+            <a href="{{ path('app_user_index') }}" class="btn-prestige btn-prestige-secondary">
+                <i class="fas fa-arrow-left"></i>
+                <span>Retour à la liste</span>
+            </a>
         </div>
     </div>
 {% endblock %}

@@ -1,7 +1,6 @@
 {% extends 'base_admin.html.twig' %}
 
 {% block title %}Tableau de bord Prestige | Administration{% endblock %}
-
 {% block page_title %}Tableau de bord{% endblock %}
 
 {% block stylesheets %}
@@ -70,7 +69,6 @@
             border-color: var(--gold-secondary);
         }
 
-        /* Décoration subtile sur les cartes */
         .stat-card::before {
             content: '';
             position: absolute;
@@ -127,7 +125,6 @@
             opacity: 0.2;
         }
 
-        /* Section d'activité récente ou raccourcis */
         .quick-actions {
             margin-top: 4rem;
         }
@@ -180,6 +177,21 @@
             background: transparent;
             color: var(--gold-primary);
         }
+
+        /* Style graphique */
+        .chart-container {
+    background: white;
+    border-radius: 20px;
+    padding: 15px 20px;
+    margin-top: 2rem;
+    max-width: 1000px; /* Limite la largeur */
+    width: 100%;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+}
+
+.chart-container canvas {
+    height: 500px !important; /* Hauteur fixe pour les charts */
+}
     </style>
 {% endblock %}
 
@@ -233,18 +245,122 @@
         </div>
     </div>
 
-    <div class="quick-actions">
-        <h3 class="section-title">Actions Rapides</h3>
-        <div style="display: flex; gap: 20px; flex-wrap: wrap;">
-            <a href="#" class="action-btn gold">
-                <i class="fas fa-plus"></i> Nouvel Événement
-            </a>
-            <a href="#" class="action-btn">
-                <i class="fas fa-list"></i> Voir les Réservations
-            </a>
-            <a href="#" class="action-btn">
-                <i class="fas fa-cog"></i> Paramètres
-            </a>
-        </div>
+    <!-- Graphique 1 : Réservations par événement -->
+    <div class="chart-container">
+        <h3 class="section-title">Nombre de Réservations par Événement</h3>
+        <canvas id="reservationsChart"></canvas>
     </div>
+
+    <!-- Graphique 2 : Répartition des événements par catégorie -->
+    <div class="chart-container">
+        <h3 class="section-title">Répartition des Événements par Catégorie</h3>
+        <canvas id="eventsCategoryChart"></canvas>
+    </div>
+
+    <!-- Actions rapides -->
+   
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script> <!-- Pour les labels -->
+
+<script>
+    // Chart 1 : Réservations par événement (barres arrondies + animation)
+    const ctx1 = document.getElementById('reservationsChart').getContext('2d');
+    const reservationsChart = new Chart(ctx1, {
+        type: 'bar',
+        data: {
+            labels: [
+                {% for event in events %}
+                    "{{ event.titre }}"{% if not loop.last %}, {% endif %}
+                {% endfor %}
+            ],
+            datasets: [{
+                label: 'Nombre de réservations',
+                data: [
+                    {% for event in events %}
+                        {{ event.reservations|length }}{% if not loop.last %}, {% endif %}
+                    {% endfor %}
+                ],
+                backgroundColor: 'rgba(197, 160, 89, 0.6)',
+                borderColor: 'rgba(197, 160, 89, 1)',
+                borderWidth: 1,
+                borderRadius: 12, // coins arrondis
+                borderSkipped: false
+            }]
+        },
+        options: {
+            responsive: true,
+            animation: {
+                duration: 1500, // animation 1.5s
+                easing: 'easeOutQuart'
+            },
+            plugins: {
+                legend: { display: true, position: 'top' },
+                tooltip: { mode: 'index', intersect: false },
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: { stepSize: 1 }
+                }
+            }
+        }
+    });
+
+    // Chart 2 : Répartition des événements par catégorie (pie + pourcentages)
+    const ctx2 = document.getElementById('eventsCategoryChart').getContext('2d');
+    const eventsCategoryChart = new Chart(ctx2, {
+        type: 'pie',
+        data: {
+            labels: [
+                {% for category in categories %}
+                    "{{ category.name }}"{% if not loop.last %}, {% endif %}
+                {% endfor %}
+            ],
+            datasets: [{
+                label: 'Événements par catégorie',
+                data: [
+                    {% for category in categories %}
+                        {{ category.events|length }}{% if not loop.last %}, {% endif %}
+                    {% endfor %}
+                ],
+                backgroundColor: [
+                    'rgba(197, 160, 89, 0.6)',
+                    'rgba(226, 194, 117, 0.6)',
+                    'rgba(16, 185, 129, 0.6)',
+                    'rgba(59, 130, 246, 0.6)',
+                    'rgba(168, 85, 247, 0.6)'
+                ],
+                borderColor: 'rgba(255,255,255,1)',
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            animation: {
+                animateScale: true, // animation de l'apparition
+                animateRotate: true,
+                duration: 1200,
+                easing: 'easeOutBounce'
+            },
+            plugins: {
+                legend: { position: 'right' },
+                datalabels: {
+                    color: '#fff',
+                    formatter: (value, context) => {
+                        let sum = context.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+                        let percentage = (value * 100 / sum).toFixed(1) + '%';
+                        return percentage;
+                    },
+                    font: { weight: 'bold', size: 14 }
+                }
+            }
+        },
+        plugins: [ChartDataLabels] // plugin pour afficher les pourcentages
+    });
+</script>
+
 {% endblock %}

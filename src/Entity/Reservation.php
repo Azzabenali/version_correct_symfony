@@ -25,113 +25,58 @@ class Reservation
     private ?float $totalprice = null;
 
     #[ORM\ManyToOne(inversedBy: 'reservations')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)] // <-- nullable maintenant
     private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'reservations')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)] // <-- nullable maintenant
     private ?Event $event = null;
 
-    #[ORM\OneToMany(
-    mappedBy: 'reservation',
-    targetEntity: Ticket::class,
-    cascade: ['persist'],
-    orphanRemoval: true
-)]
-private Collection $tickets; // ← note le "s" à la fin
+    #[ORM\OneToMany(mappedBy: 'reservation', targetEntity: Ticket::class, cascade: ['persist'], orphanRemoval: true)]
+    private Collection $tickets;
 
+   #[ORM\Column(length: 255)]
+    private ?string $titre = null; 
 
     public function __construct()
     {
         $this->tickets = new ArrayCollection();
+        $this->titre = 'Nouvelle réservation'; 
     }
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
+    public function getId(): ?int { return $this->id; }
+    public function getResdate(): ?\DateTime { return $this->resdate; }
+    public function setResdate(\DateTime $resdate): static { $this->resdate = $resdate; return $this; }
+    public function getNumbertickets(): ?int { return $this->numbertickets; }
+    public function setNumbertickets(int $numbertickets): static { $this->numbertickets = $numbertickets; return $this; }
+    public function getTotalprice(): ?float { return $this->totalprice; }
+    public function setTotalprice(float $totalprice): static { $this->totalprice = $totalprice; return $this; }
+    public function getUser(): ?User { return $this->user; }
+    public function setUser(?User $user): static { $this->user = $user; return $this; }
+    public function getEvent(): ?Event { return $this->event; }
+    public function setEvent(?Event $event): static { $this->event = $event; return $this; }
 
-    public function getResdate(): ?\DateTime
-    {
-        return $this->resdate;
-    }
 
-    public function setResdate(\DateTime $resdate): static
-    {
-        $this->resdate = $resdate;
-        return $this;
+    public function addTicket(Ticket $ticket): static { 
+        if (!$this->tickets->contains($ticket)) { $this->tickets->add($ticket); $ticket->setReservation($this); } 
+        return $this; 
     }
-
-    public function getNumbertickets(): ?int
-    {
-        return $this->numbertickets;
+    public function removeTicket(Ticket $ticket): static { 
+        if ($this->tickets->removeElement($ticket)) { if ($ticket->getReservation() === $this) { $ticket->setReservation(null); } } 
+        return $this; 
     }
-
-    public function setNumbertickets(int $numbertickets): static
-    {
-        $this->numbertickets = $numbertickets;
-        return $this;
-    }
-
-    public function getTotalprice(): ?float
-    {
-        return $this->totalprice;
-    }
-
-    public function setTotalprice(float $totalprice): static
-    {
-        $this->totalprice = $totalprice;
-        return $this;
-    }
-
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(?User $user): static
-    {
-        $this->user = $user;
-        return $this;
-    }
-
-    public function getEvent(): ?Event
-    {
-        return $this->event;
-    }
-
-    public function setEvent(?Event $event): static
-    {
-        $this->event = $event;
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Ticket>
-     */
-    public function getTickets(): Collection
+public function getTickets(): Collection { return $this->tickets; }
+   
+public function getTitre(): ?string
 {
-    return $this->tickets;
+    return $this->titre;
 }
 
-    public function addTicket(Ticket $ticket): static
-    {
-        if (!$this->tickets->contains($ticket)) {
-            $this->tickets->add($ticket);
-            $ticket->setReservation($this);
-        }
+public function setTitre(string $titre): static
+{
+    $this->titre = $titre;
+    return $this;
+}
 
-        return $this;
-    }
 
-    public function removeTicket(Ticket $ticket): static
-    {
-        if ($this->tickets->removeElement($ticket)) {
-            if ($ticket->getReservation() === $this) {
-                $ticket->setReservation(null);
-            }
-        }
-
-        return $this;
-    }
 }

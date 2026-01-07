@@ -154,53 +154,48 @@
             <span style="font-weight: 600; font-size: 0.9rem;">Réservations</span>
         </div>
 
-        <a href="{{ path('app_reservation_new') }}" class="btn-prestige-add">
-            <i class="fas fa-plus"></i>
-            <span>Ajouter une réservation</span>
-        </a>
+       
     </div>
 
     <div class="table-container">
         <table class="prestige-table">
             <thead>
-                <tr>
-                    <th style="width: 60px;">ID</th>
-                    <th>Date</th>
-                    <th>Tickets</th>
-                    <th>Prix total</th>
-                    <th style="width: 150px; text-align: right;">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for reservation in reservations %}
-                    <tr>
-                        <td><span class="item-id">#{{ reservation.id }}</span></td>
-                        <td>{{ reservation.resdate ? reservation.resdate|date('d/m/Y H:i') : 'Non défini' }}</td>
-                        <td>{{ reservation.numbertickets }}</td>
-                        <td>{{ reservation.totalprice ? reservation.totalprice ~ ' €' : '-' }}</td>
-                        <td>
-                            <div class="actions-cell">
-                                <a href="{{ path('app_reservation_show', {'id': reservation.id}) }}" class="btn-action btn-view" title="Voir">
-                                    <i class="fas fa-eye"></i>
-                                </a>
-                                <a href="{{ path('app_reservation_edit', {'id': reservation.id}) }}" class="btn-action btn-edit" title="Modifier">
-                                    <i class="fas fa-pen"></i>
-                                </a>
-                                {{ include('reservation/_delete_form.html.twig') }}
-                            </div>
-                        </td>
-                    </tr>
-                {% else %}
-                    <tr>
-                        <td colspan="5">
-                            <div class="empty-state">
-                                <i class="fas fa-ticket-alt" style="font-size: 3rem; color: #e2e8f0; margin-bottom: 1rem; display: block;"></i>
-                                <p>Aucune réservation trouvée.</p>
-                            </div>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
+    <tr>
+        <th style="width: 60px;">ID</th>
+        <th>Utilisateur</th>
+        <th>Événement</th>
+        <th>Date</th>
+        <th>Tickets</th>
+        <th>Prix total</th>
+        <th style="width: 150px; text-align: right;">Actions</th>
+    </tr>
+</thead>
+<tbody>
+    {% for reservation in reservations %}
+        <tr>
+            <td><span class="item-id">#{{ reservation.id }}</span></td>
+           <td>{{ reservation.user is not null ? reservation.user.name : 'Anonyme' }}</td>
+<td>{{ reservation.event.titre ?: 'Non défini' }}</td>
+
+            <td>{{ reservation.resdate ? reservation.resdate|date('d/m/Y H:i') : 'Non défini' }}</td>
+            <td>{{ reservation.numbertickets }}</td>
+            <td>{{ reservation.totalprice ? reservation.totalprice ~ ' €' : '-' }}</td>
+            <td>
+                
+            </td>
+        </tr>
+    {% else %}
+        <tr>
+            <td colspan="7">
+                <div class="empty-state">
+                    <i class="fas fa-ticket-alt" style="font-size: 3rem; color: #e2e8f0; margin-bottom: 1rem; display: block;"></i>
+                    <p>Aucune réservation trouvée.</p>
+                </div>
+            </td>
+        </tr>
+    {% endfor %}
+</tbody>
+
         </table>
     </div>
 {% endblock %}

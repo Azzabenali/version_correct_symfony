@@ -19,89 +19,140 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 180)]
+    #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
 
-    
-    
     #[ORM\Column(type: 'json')]
-    private array $roles = ['ROLE_USER']; 
+    private array $roles = ['ROLE_USER'];
 
     #[ORM\Column]
     private ?string $password = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $name = null;
+    #[Assert\NotBlank(message: "Le nom est obligatoire")]
+    #[ORM\Column(length: 255)]
+    private string $name;
+
 
     #[ORM\Column]
     private bool $isVerified = false;
 
-    /**
-     * @var Collection<int, Reservation>
-     */
-    #[ORM\OneToMany(targetEntity: Reservation::class, mappedBy: 'user')]
-    private Collection $reservations;
+   #[ORM\OneToMany(mappedBy: 'user', targetEntity: Reservation::class)]
+private Collection $reservations;
+
+
+
+
 
     public function __construct()
     {
         $this->reservations = new ArrayCollection();
     }
 
-    public function getId(): ?int { return $this->id; }
-    public function getEmail(): ?string { return $this->email; }
-    public function setEmail(string $email): static { $this->email = $email; return $this; }
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
 
-    public function getUserIdentifier(): string { return (string)$this->email; }
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
 
-    public function getRoles(): array {
+    public function setEmail(string $email): static
+    {
+        $this->email = $email;
+        return $this;
+    }
+
+    /**
+     * Identifiant Symfony (MODERNE)
+     */
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->email;
+    }
+
+    /**
+     * ⚠️ COMPATIBILITÉ UNIQUEMENT
+     * username = name s’il existe, sinon email
+     * ❌ PAS de champ username
+     */
+   
+    public function getRoles(): array
+    {
         $roles = $this->roles;
-        if (!in_array('ROLE_USER', $roles)) $roles[] = 'ROLE_USER';
+        if (!in_array('ROLE_USER', $roles)) {
+            $roles[] = 'ROLE_USER';
+        }
         return array_unique($roles);
     }
 
-    public function setRoles(array $roles): static { $this->roles = $roles; return $this; }
-
-    public function getPassword(): ?string { return $this->password; }
-    public function setPassword(string $password): static { $this->password = $password; return $this; }
-
-    /**
-     * Serialize password safely (Symfony 7.3+)
-     */
-    public function __serialize(): array
+    public function setRoles(array $roles): static
     {
-        $data = (array)$this;
-        $data["\0".self::class."\0password"] = hash('crc32c', $this->password);
-        return $data;
+        $this->roles = $roles;
+        return $this;
+    }
+
+    public function getPassword(): ?string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(string $password): static
+    {
+        $this->password = $password;
+        return $this;
     }
 
     public function eraseCredentials(): void {}
 
-    public function getName(): ?string { return $this->name; }
-    public function setName(string $name): static { $this->name = $name; return $this; }
+    public function getName(): string
+{
+    return $this->name;
+}
 
-    public function getIsVerified(): bool { return $this->isVerified; }
-    public function setIsVerified(bool $isVerified): static { $this->isVerified = $isVerified; return $this; }
+public function setName(string $name): self
+{
+    $this->name = $name;
+    return $this;
+}
 
-    /** @return Collection<int, Reservation> */
-    public function getReservations(): Collection { return $this->reservations; }
-
-    public function addReservation(Reservation $reservation): static {
-        if (!$this->reservations->contains($reservation)) {
-            $this->reservations->add($reservation);
-            $reservation->setUser($this);
-        }
-        return $this;
+    public function getIsVerified(): bool
+    {
+        return $this->isVerified;
     }
 
-    public function removeReservation(Reservation $reservation): static {
-        if ($this->reservations->removeElement($reservation)) {
-            if ($reservation->getUser() === $this) $reservation->setUser(null);
-        }
+    public function setIsVerified(bool $isVerified): static
+    {
+        $this->isVerified = $isVerified;
         return $this;
     }
 
    
+    public function getReservations(): Collection
+{
+    return $this->reservations;
+}
 
+// Ajouter / supprimer réservation
+public function addReservation(Reservation $reservation): self
+{
+    if (!$this->reservations->contains($reservation)) {
+        $this->reservations->add($reservation);
+        $reservation->setUser($this);
+    }
 
+    return $this;
+}
 
+public function removeReservation(Reservation $reservation): self
+{
+    if ($this->reservations->removeElement($reservation)) {
+        if ($reservation->getUser() === $this) {
+            $reservation->setUser(null);
+        }
+    }
+
+    return $this;
+}
 }

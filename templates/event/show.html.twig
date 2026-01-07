@@ -1,8 +1,8 @@
 {% extends 'base_admin.html.twig' %}
 
-{% block title %}Détails Conférence - Administration Prestige{% endblock %}
+{% block title %}Détails evenement - Administration Prestige{% endblock %}
 
-{% block page_title %}Détails de la Conférence{% endblock %}
+{% block page_title %}Détails de l'evenement{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -130,6 +130,21 @@
             padding: 0.5rem;
             border-radius: 12px;
         }
+        .event-image-wrapper {
+    padding: 2rem;
+    text-align: center;
+    background: #fcfdfe;
+}
+
+.event-image {
+    max-width: 100%;
+    max-height: 350px;
+    border-radius: 18px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    border: 2px solid #f1f5f9;
+    object-fit: cover;
+}
+
     </style>
 {% endblock %}
 
@@ -162,6 +177,25 @@
                             {{ event.date ? event.date|date('d/m/Y H:i') : 'Non définie' }}
                         </td>
                     </tr>
+                    <tr>
+    <th>Image</th>
+    <td>
+        {% if event.image %}
+            <div class="event-image-wrapper">
+                <img src="{{ asset('uploads/events/' ~ event.image) }}"
+                     alt="{{ event.titre }}"
+                     class="event-image">
+            </div>
+        {% else %}
+            <div class="event-image-wrapper">
+                <img src="{{ asset('uploads/events/default.jpg') }}"
+                     alt="Image par défaut"
+                     class="event-image">
+            </div>
+        {% endif %}
+    </td>
+</tr>
+
                 </tbody>
             </table>
         </div>

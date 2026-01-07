@@ -27,6 +27,21 @@ class Ticket
     #[ORM\JoinColumn(nullable: false)]
     private ?Event $event = null;
 
+    #[ORM\Column]
+private ?int $quantity = null;
+
+public function getQuantity(): ?int
+{
+    return $this->quantity;
+}
+
+public function setQuantity(int $quantity): static
+{
+    $this->quantity = $quantity;
+    return $this;
+}
+
+
     public function getId(): ?int
     {
         return $this->id;

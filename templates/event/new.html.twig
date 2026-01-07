@@ -1,8 +1,8 @@
 {% extends 'base_admin.html.twig' %}
 
-{% block title %}Nouvelle Conférence - Administration Prestige{% endblock %}
+{% block title %}Nouveau evenement - Administration Prestige{% endblock %}
 
-{% block page_title %}Ajouter une conférence{% endblock %}
+{% block page_title %}Ajouter un evenement{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -103,24 +103,21 @@
 {% endblock %}
 
 {% block body %}
-    <div class="prestige-container">
-        <div class="prestige-header">
-            <h2 class="prestige-title">Créer une nouvelle conférence</h2>
-        </div>
+<div class="prestige-container">
+    <h2 class="prestige-title">Créer une nouvelle conférence</h2>
 
-        <div class="form-section">
-            {{ include('conference/_form.html.twig') }}
-        </div>
-
-        <div class="actions-bar">
-            <button type="submit" class="btn-prestige btn-prestige-primary" form="conference_form">
-                <i class="fas fa-plus-circle"></i>
-                <span>Enregistrer la conférence</span>
-            </button>
-            <a href="{{ path('app_event_index') }}" class="btn-prestige btn-prestige-secondary">
-                <i class="fas fa-arrow-left"></i>
-                <span>Retour à la liste</span>
-            </a>
-        </div>
+    <div class="form-section">
+        {{ include('event/_form.html.twig') }}
     </div>
+
+    <div class="actions-bar">
+        <button type="submit" class="btn-prestige btn-prestige-primary" form="event_form">
+            Enregistrer la conférence
+        </button>
+
+        <a href="{{ path('app_event_index') }}" class="btn-prestige btn-prestige-secondary">
+            Retour à la liste
+        </a>
+    </div>
+</div>
 {% endblock %}

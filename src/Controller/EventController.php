@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted; // ← Ajouté !
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 #[Route('/event')]
 #[IsGranted('ROLE_ADMIN')] 
@@ -25,25 +26,41 @@ final class EventController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_event_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
-    {
-        $event = new Event();
-        $form = $this->createForm(EventType::class, $event);
-        $form->handleRequest($request);
+   #[Route('/new', name: 'app_event_new', methods: ['GET', 'POST'])]
+public function new(Request $request, EntityManagerInterface $entityManager): Response
+{
+    $event = new Event();
+    $form = $this->createForm(EventType::class, $event);
+    $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($event);
-            $entityManager->flush();
+    if ($form->isSubmitted() && $form->isValid()) {
 
-            return $this->redirectToRoute('app_event_index', [], Response::HTTP_SEE_OTHER);
+        /** @var UploadedFile $imageFile */
+        $imageFile = $form->get('image')->getData();
+
+        if ($imageFile) {
+            $newFilename = uniqid().'.'.$imageFile->guessExtension();
+
+            $imageFile->move(
+                $this->getParameter('kernel.project_dir').'/public/uploads/events',
+                $newFilename
+            );
+
+            $event->setImage($newFilename);
         }
 
-        return $this->render('event/new.html.twig', [
-            'event' => $event,
-            'form' => $form,
-        ]);
+        $entityManager->persist($event);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_event_index');
     }
+
+    return $this->render('event/new.html.twig', [
+        'event' => $event,
+        'form' => $form,
+    ]);
+}
+
 
     #[Route('/{id}', name: 'app_event_show', methods: ['GET'])]
     public function show(Event $event): Response
@@ -54,31 +71,55 @@ final class EventController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_event_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Event $event, EntityManagerInterface $entityManager): Response
-    {
-        $form = $this->createForm(EventType::class, $event);
-        $form->handleRequest($request);
+public function edit(Request $request, Event $event, EntityManagerInterface $entityManager): Response
+{
+    $oldImage = $event->getImage();
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
+    $form = $this->createForm(EventType::class, $event);
+    $form->handleRequest($request);
 
-            return $this->redirectToRoute('app_event_index', [], Response::HTTP_SEE_OTHER);
+    if ($form->isSubmitted() && $form->isValid()) {
+
+        /** @var UploadedFile $imageFile */
+        $imageFile = $form->get('image')->getData();
+
+        if ($imageFile) {
+            $newFilename = uniqid().'.'.$imageFile->guessExtension();
+
+            $imageFile->move(
+                $this->getParameter('kernel.project_dir').'/public/uploads/events',
+                $newFilename
+            );
+
+            $event->setImage($newFilename);
+        } else {
+            $event->setImage($oldImage);
         }
 
-        return $this->render('event/edit.html.twig', [
-            'event' => $event,
-            'form' => $form,
-        ]);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_event_index');
     }
+
+    return $this->render('event/edit.html.twig', [
+        'event' => $event,
+        'form' => $form,
+    ]);
+}
 
     #[Route('/{id}', name: 'app_event_delete', methods: ['POST'])]
-    public function delete(Request $request, Event $event, EntityManagerInterface $entityManager): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$event->getId(), $request->getPayload()->getString('_token'))) {
-            $entityManager->remove($event);
-            $entityManager->flush();
-        }
-
-        return $this->redirectToRoute('app_event_index', [], Response::HTTP_SEE_OTHER);
+    public function delete(Event $event, EntityManagerInterface $em, Request $request): Response
+{
+    // Vérification CSRF
+    if (!$this->isCsrfTokenValid('delete'.$event->getId(), $request->request->get('_token'))) {
+        throw $this->createAccessDeniedException('Token CSRF invalide.');
     }
-}
+
+    // Suppression de l'événement
+    $em->remove($event);
+    $em->flush();
+
+    $this->addFlash('success', 'Événement supprimé avec succès.');
+
+    return $this->redirectToRoute('app_event_index'); // ou la page où tu affiches tes events
+}}

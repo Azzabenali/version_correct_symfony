@@ -204,23 +204,27 @@
         <select name="category">
             <option value="">🎯 Toutes les Catégories</option>
             {% for c in categories %}
-                <option value="{{ c.id }}">{{ c.name }}</option>
+                <option value="{{ c.id }}" {% if c.id == app.request.get('category') %}selected{% endif %}>
+                    {{ c.name }}
+                </option>
             {% endfor %}
         </select>
 
         <select name="lieu">
             <option value="">📍 Tous les Lieux</option>
             {% for l in lieux %}
-                <option value="{{ l.id }}">{{ l.nom }}</option>
+                <option value="{{ l.id }}" {% if l.id == app.request.get('lieu') %}selected{% endif %}>
+                    {{ l.nom }}
+                </option>
             {% endfor %}
         </select>
 
-        <input type="date" name="date">
-        <input type="number" name="prix" placeholder="💰 Budget Max (DT)">
-
+        <input type="date" name="date" value="{{ app.request.get('date') }}">
+        <input type="number" name="prix" placeholder="💰 Budget Max (DT)" value="{{ app.request.get('prix') }}">
         <button type="submit">Affiner la Sélection</button>
     </div>
 </form>
+
 
 <div class="container pb-5">
     <h1 class="prestige-title">Expériences d'Exception</h1>
@@ -237,20 +241,17 @@
                 <div class="col-md-6 col-lg-4">
                     <div class="event-card-prestige">
                         <div class="card-img-wrapper">
-                            <img src="{{ asset('images/' ~ event.image) }}" alt="{{ event.titre }}">
+                            <img src="{{ asset('uploads/events/' ~ event.image) }}" alt="{{ event.titre }}">
                             <div class="price-tag">{{ event.prix }} DT</div>
                         </div>
-
                         <div class="card-body-prestige">
                             <span class="card-category">{{ event.category.name }}</span>
                             <h5 class="card-title-prestige">{{ event.titre }}</h5>
-
                             <ul class="card-info-list">
                                 <li><i class="fas fa-calendar-day"></i> {{ event.date|date('d/m/Y') }}</li>
                                 <li><i class="fas fa-map-marker-alt"></i> {{ event.lieu.nom }}</li>
                                 <li><i class="fas fa-ticket-alt"></i> {{ event.nombreDePlaces }} Places disponibles</li>
                             </ul>
-
                             <a href="{{ path('client_event_show', { id: event.id }) }}" class="btn-prestige-outline">
                                 Découvrir l'expérience
                             </a>

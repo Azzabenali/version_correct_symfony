@@ -10,13 +10,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Security\Http\Attribute\IsGranted; // ← Ajouté !
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/reservation')]
-#[IsGranted('ROLE_ADMIN')] // ← Protection globale du contrôleur
+#[IsGranted('ROLE_ADMIN')]
 final class ReservationController extends AbstractController
 {
-    #[Route(name: 'app_reservation_index', methods: ['GET'])]
+    #[Route('/', name: 'app_reservation_index', methods: ['GET'])]
     public function index(ReservationRepository $reservationRepository): Response
     {
         return $this->render('reservation/index.html.twig', [
@@ -60,7 +60,6 @@ final class ReservationController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
-
             return $this->redirectToRoute('app_reservation_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -73,7 +72,7 @@ final class ReservationController extends AbstractController
     #[Route('/{id}', name: 'app_reservation_delete', methods: ['POST'])]
     public function delete(Request $request, Reservation $reservation, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$reservation->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete'.$reservation->getId(), $request->request->get('_token'))) {
             $entityManager->remove($reservation);
             $entityManager->flush();
         }

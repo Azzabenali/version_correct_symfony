@@ -8,6 +8,8 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Validator\Constraints\File;
 
 class EventType extends AbstractType
 {
@@ -19,7 +21,23 @@ class EventType extends AbstractType
             ->add('date')
             ->add('lieu')
             ->add('prix')
-            ->add('image')
+            ->add('image', FileType::class, [
+    'label' => 'Image de la conférence',
+    'mapped' => false, // 🔥 très important
+    'required' => false,
+    'constraints' => [
+        new File([
+            'maxSize' => '2M',
+            'mimeTypes' => [
+                'image/jpeg',
+                'image/png',
+                'image/webp',
+            ],
+            'mimeTypesMessage' => 'Veuillez uploader une image valide (JPEG, PNG, WEBP)',
+        ])
+    ],
+])
+
             ->add('nombreDePlaces')
             ->add('category', EntityType::class, [
                 'class' => Category::class,

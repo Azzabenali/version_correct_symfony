@@ -1,6 +1,6 @@
 {% extends 'base_admin.html.twig' %}
 
-{% block title %}Modifier Utilisateur - Administration{% endblock %}
+{% block title %}Modifier Utilisateur - Administration Prestige{% endblock %}
 {% block page_title %}Modifier un utilisateur{% endblock %}
 
 {% block stylesheets %}
@@ -14,7 +14,7 @@
         }
 
         .prestige-container {
-            max-width: 800px;
+            max-width: 900px;
             margin: 2rem auto;
             background: white;
             padding: 2.5rem;
@@ -24,30 +24,33 @@
         }
 
         .prestige-header {
-            margin-bottom: 2rem;
-            border-bottom: 2px solid #f8fafc;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2.5rem;
             padding-bottom: 1rem;
+            border-bottom: 2px solid #f8fafc;
         }
 
         .prestige-title {
-            font-size: 1.5rem;
+            font-size: 1.75rem;
             font-weight: 700;
             color: var(--dark-bg);
             margin: 0;
         }
 
-        .actions-bar {
-            display: flex;
-            gap: 1rem;
-            margin-top: 2rem;
+        .item-id {
+            color: var(--gold-primary);
+            font-weight: 700;
+            font-size: 1rem;
         }
 
         .btn-prestige {
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
-            padding: 0.75rem 1.5rem;
-            border-radius: 10px;
+            gap: 0.75rem;
+            padding: 0.875rem 1.5rem;
+            border-radius: 12px;
             font-weight: 600;
             font-size: 0.9rem;
             text-decoration: none;
@@ -76,13 +79,59 @@
             background: #e2e8f0;
             color: var(--dark-bg);
         }
+
+        .form-section input,
+        .form-section textarea,
+        .form-section select {
+            width: 100%;
+            padding: 0.875rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            margin-top: 0.5rem;
+            margin-bottom: 1.25rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-section input:focus,
+        .form-section textarea:focus,
+        .form-section select:focus {
+            border-color: var(--gold-primary);
+            box-shadow: 0 0 0 4px rgba(197,160,89,0.1);
+            outline: none;
+        }
+
+        .actions-bar {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #f1f5f9;
+        }
+
+        .delete-section {
+            margin-top: 3rem;
+            padding: 1.5rem;
+            background: #fff1f2;
+            border-radius: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .delete-text {
+            color: #be123c;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
     </style>
 {% endblock %}
 
 {% block body %}
 <div class="prestige-container">
+
     <div class="prestige-header">
         <h2 class="prestige-title">Modifier l'utilisateur</h2>
+        <span class="item-id">#{{ user.id }}</span>
     </div>
 
     <div class="form-section">
@@ -90,15 +139,27 @@
     </div>
 
     <div class="actions-bar">
-        <button type="submit" class="btn-prestige btn-prestige-primary" form="user_form">
-            <i class="fas fa-pen"></i> Mettre à jour
-        </button>
+        <button type="submit"
+        class="btn-prestige btn-prestige-primary"
+        form="user_form">
+    <i class="fas fa-save"></i>
+    <span>Mettre à jour l'utilisateur</span>
+</button>
 
-        <a href="{{ path('app_user_index') }}" class="btn-prestige btn-prestige-secondary">
-            <i class="fas fa-arrow-left"></i> Retour à la liste
+
+        <a href="{{ path('app_user_index') }}"
+           class="btn-prestige btn-prestige-secondary">
+            <i class="fas fa-arrow-left"></i>
+            <span>Retour à la liste</span>
         </a>
+    </div>
 
+    <div class="delete-section">
+        <span class="delete-text">
+            Zone de danger : Supprimer définitivement cet utilisateur
+        </span>
         {{ include('user/_delete_form.html.twig') }}
     </div>
+
 </div>
 {% endblock %}

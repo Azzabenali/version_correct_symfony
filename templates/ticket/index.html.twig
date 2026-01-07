@@ -145,60 +145,70 @@
             color: var(--text-muted);
         }
     </style>
-{% endblock %}
-
+    {% endblock %}
 {% block body %}
-    <div class="action-bar">
-        <div class="breadcrumb">
-            <span style="color: var(--text-muted); font-size: 0.9rem;">Administration / </span>
-            <span style="font-weight: 600; font-size: 0.9rem;">Tickets</span>
-        </div>
-
-        <a href="{{ path('app_ticket_new') }}" class="btn-prestige-add">
-            <i class="fas fa-plus"></i>
-            <span>Ajouter un ticket</span>
-        </a>
-    </div>
-
-    <div class="table-container">
-        <table class="prestige-table">
-            <thead>
+<div class="table-container">
+    <table class="prestige-table">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Quantité</th>
+                <th>Prix</th>
+                <th>Utilisateur</th>
+                <th>Événement</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ticket in tickets %}
                 <tr>
-                    <th style="width: 60px;">ID</th>
-                    <th>Nom</th>
-                    <th>Prix</th>
-                    <th style="width: 150px; text-align: right;">Actions</th>
+                    <td>{{ ticket.name }}</td>
+                    <td>{{ ticket.quantity }}</td>
+                    <td>{{ ticket.price }} €</td>
+                    <td>
+                        {% if ticket.reservation and ticket.reservation.user %}
+                            {{ ticket.reservation.user.name }}
+                        {% else %}
+                            Inconnu
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if ticket.event %}
+                            {{ ticket.event.titre }}
+                        {% else %}
+                            Inconnu
+                        {% endif %}
+                    </td>
+                    <td class="actions-cell">
+    {# Bouton Voir #}
+    <a href="{{ path('app_ticket_show', {'id': ticket.id}) }}" class="btn-action btn-view" title="Voir">
+        <i class="fas fa-eye"></i>
+    </a>
+
+    {# Bouton Modifier #}
+    <a href="{{ path('app_ticket_edit', {'id': ticket.id}) }}" class="btn-action btn-edit" title="Modifier">
+        <i class="fas fa-pen"></i>
+    </a>
+
+    {# Bouton Supprimer #}
+    <form method="post" 
+          action="{{ path('app_ticket_delete', {'id': ticket.id}) }}" 
+          onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce ticket ?');" 
+          style="display:inline">
+        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ ticket.id) }}">
+        <button class="btn-action btn-delete" type="submit" title="Supprimer">
+            <i class="fas fa-trash-alt"></i>
+        </button>
+    </form>
+</td>
+
                 </tr>
-            </thead>
-            <tbody>
-                {% for ticket in tickets %}
-                    <tr>
-                        <td><span class="item-id">#{{ ticket.id }}</span></td>
-                        <td>{{ ticket.name }}</td>
-                        <td>{{ ticket.price ? ticket.price ~ ' €' : '-' }}</td>
-                        <td>
-                            <div class="actions-cell">
-                                <a href="{{ path('app_ticket_show', {'id': ticket.id}) }}" class="btn-action btn-view" title="Voir">
-                                    <i class="fas fa-eye"></i>
-                                </a>
-                                <a href="{{ path('app_ticket_edit', {'id': ticket.id}) }}" class="btn-action btn-edit" title="Modifier">
-                                    <i class="fas fa-pen"></i>
-                                </a>
-                                {{ include('ticket/_delete_form.html.twig') }}
-                            </div>
-                        </td>
-                    </tr>
-                {% else %}
-                    <tr>
-                        <td colspan="4">
-                            <div class="empty-state">
-                                <i class="fas fa-ticket-alt" style="font-size: 3rem; color: #e2e8f0; margin-bottom: 1rem; display: block;"></i>
-                                <p>Aucun ticket trouvé.</p>
-                            </div>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+            {% else %}
+                <tr>
+                    <td colspan="6" style="text-align:center; color:var(--text-muted)">Aucun ticket disponible.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% endblock %}
